@@ -49,7 +49,6 @@
     h1 {
       margin: 0;
       font-size: 34px;
-      letter-spacing: -0.8px;
       color: #f8fafc;
     }
 
@@ -58,22 +57,6 @@
       color: #cbd5e1;
       font-size: 15px;
       line-height: 1.6;
-    }
-
-    .student-info {
-      display: inline-block;
-      margin-top: 14px;
-      padding: 12px 16px;
-      border-radius: 14px;
-      background: rgba(59, 130, 246, 0.12);
-      border: 1px solid rgba(147, 197, 253, 0.22);
-      color: #bfdbfe;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .student-info strong {
-      color: #f8fafc;
     }
 
     .grid {
@@ -91,6 +74,10 @@
       backdrop-filter: blur(16px);
     }
 
+    .full {
+      grid-column: 1 / -1;
+    }
+
     .card h2 {
       margin-top: 0;
       margin-bottom: 8px;
@@ -102,10 +89,6 @@
       color: #cbd5e1;
       font-size: 14px;
       line-height: 1.6;
-    }
-
-    .full {
-      grid-column: 1 / -1;
     }
 
     label {
@@ -127,11 +110,6 @@
       font-size: 14px;
     }
 
-    input:focus {
-      border-color: #60a5fa;
-      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
-    }
-
     button {
       width: 100%;
       margin-top: 16px;
@@ -143,12 +121,6 @@
       font-weight: 600;
       font-size: 14px;
       cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.3);
     }
 
     button.secondary {
@@ -160,7 +132,7 @@
       background: linear-gradient(135deg, #dc2626, #991b1b);
     }
 
-    .wallet-box {
+    .wallet-box, .result {
       margin-top: 16px;
       background: rgba(30, 41, 59, 0.75);
       border: 1px solid rgba(148, 163, 184, 0.18);
@@ -169,18 +141,6 @@
       word-break: break-all;
       color: #bfdbfe;
       font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .result {
-      margin-top: 16px;
-      padding: 16px;
-      border-radius: 16px;
-      background: rgba(37, 99, 235, 0.12);
-      border: 1px solid rgba(96, 165, 250, 0.25);
-      color: #bfdbfe;
-      font-size: 15px;
-      min-height: 52px;
       line-height: 1.5;
     }
 
@@ -196,18 +156,6 @@
       color: #fecaca;
     }
 
-    .footer {
-      text-align: center;
-      margin-top: 28px;
-      color: #94a3b8;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .footer strong {
-      color: #bfdbfe;
-    }
-
     .link-box {
       margin-top: 16px;
       font-size: 14px;
@@ -219,8 +167,11 @@
       text-decoration: none;
     }
 
-    .link-box a:hover {
-      text-decoration: underline;
+    .footer {
+      text-align: center;
+      margin-top: 28px;
+      color: #94a3b8;
+      font-size: 13px;
     }
 
     @media (max-width: 800px) {
@@ -245,16 +196,9 @@
     <div class="header">
       <div class="badge">Admin Panel</div>
       <h1>Kantin Biru Point</h1>
-
       <p class="subtitle">
-        Halaman khusus admin atau kasir untuk menambahkan poin, melakukan redeem,
-        dan mengecek saldo Biru Point mahasiswa.
+        Halaman khusus admin/kasir untuk mendaftarkan mahasiswa, menambah poin, redeem poin, dan mengecek saldo.
       </p>
-
-      <div class="student-info">
-        <strong>Samuel Ezra Adhiatmoko</strong><br>
-        NIM: 672023153
-      </div>
     </div>
 
     <div class="grid">
@@ -262,7 +206,7 @@
       <div class="card full">
         <h2>Connect Wallet Admin</h2>
         <p>
-          Hubungkan wallet MetaMask admin. Wallet admin adalah wallet yang digunakan saat deploy smart contract.
+          Hubungkan wallet admin. Wallet admin adalah wallet yang digunakan saat deploy smart contract.
         </p>
 
         <button onclick="connectWallet()">Connect MetaMask</button>
@@ -286,37 +230,75 @@
       </div>
 
       <div class="card">
-        <h2>Tambah Poin Mahasiswa</h2>
+        <h2>Daftar Mahasiswa</h2>
         <p>
-          Digunakan setelah mahasiswa melakukan pembelian di Kantin Biru.
+          Daftarkan nama, NIM, dan wallet mahasiswa sebelum mahasiswa mendapatkan poin.
         </p>
 
-        <label>Alamat Wallet Mahasiswa</label>
-        <input type="text" id="addStudentAddress" placeholder="0x..." />
+        <label>Nama Mahasiswa</label>
+        <input type="text" id="regName" placeholder="Contoh: Samuel Ezra" />
 
-        <label>Jumlah Poin</label>
-        <input type="number" id="addAmount" placeholder="Contoh: 5" />
+        <label>NIM Mahasiswa</label>
+        <input type="text" id="regNim" placeholder="Contoh: 672023153" />
 
-        <label>Keterangan Transaksi</label>
-        <input type="text" id="addReason" placeholder="Contoh: Pembelian Rp50.000" />
+        <label>Wallet Mahasiswa</label>
+        <input type="text" id="regWallet" placeholder="0x..." />
 
-        <button onclick="addPoint()">Tambah Poin</button>
+        <button onclick="registerStudent()">Daftarkan Mahasiswa</button>
 
-        <div class="result" id="addPointResult">
-          Status penambahan poin akan tampil di sini.
+        <div class="result" id="registerResult">
+          Status pendaftaran akan tampil di sini.
         </div>
       </div>
 
       <div class="card">
-        <h2>Redeem Poin Mahasiswa</h2>
+        <h2>Cek Data Mahasiswa</h2>
         <p>
-          Digunakan ketika mahasiswa menukar poin dengan diskon atau reward.
+          Masukkan wallet mahasiswa untuk melihat nama, NIM, dan saldo BRP.
         </p>
 
-        <label>Alamat Wallet Mahasiswa</label>
-        <input type="text" id="redeemStudentAddress" placeholder="0x..." />
+        <label>Wallet Mahasiswa</label>
+        <input type="text" id="checkWallet" placeholder="0x..." />
 
-        <label>Jumlah Poin Ditukar</label>
+        <button class="secondary" onclick="checkStudent()">Cek Data</button>
+
+        <div class="result" id="checkResult">
+          Data mahasiswa akan tampil di sini.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Tambah Poin</h2>
+        <p>
+          Tambahkan poin setelah mahasiswa melakukan transaksi pembelian.
+        </p>
+
+        <label>Wallet Mahasiswa</label>
+        <input type="text" id="addWallet" placeholder="0x..." />
+
+        <label>Jumlah Poin</label>
+        <input type="number" id="addAmount" placeholder="Contoh: 5" />
+
+        <label>Keterangan</label>
+        <input type="text" id="addReason" placeholder="Contoh: Pembelian Rp50.000" />
+
+        <button onclick="addPoint()">Tambah Poin</button>
+
+        <div class="result" id="addResult">
+          Status tambah poin akan tampil di sini.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Redeem Poin</h2>
+        <p>
+          Kurangi poin ketika mahasiswa menukar reward atau diskon.
+        </p>
+
+        <label>Wallet Mahasiswa</label>
+        <input type="text" id="redeemWallet" placeholder="0x..." />
+
+        <label>Jumlah Poin</label>
         <input type="number" id="redeemAmount" placeholder="Contoh: 10" />
 
         <label>Reward</label>
@@ -324,32 +306,14 @@
 
         <button class="danger" onclick="redeemPoint()">Redeem Poin</button>
 
-        <div class="result" id="redeemPointResult">
-          Status redeem poin akan tampil di sini.
-        </div>
-      </div>
-
-      <div class="card full">
-        <h2>Cek Saldo Poin Mahasiswa</h2>
-        <p>
-          Masukkan alamat wallet mahasiswa untuk melihat jumlah Biru Point yang dimiliki.
-        </p>
-
-        <label>Alamat Wallet Mahasiswa</label>
-        <input type="text" id="checkAddress" placeholder="0x..." />
-
-        <button class="secondary" onclick="checkPointByAddress()">Cek Saldo</button>
-
-        <div class="result" id="checkPointResult">
-          Saldo poin mahasiswa akan tampil di sini.
+        <div class="result" id="redeemResult">
+          Status redeem akan tampil di sini.
         </div>
       </div>
 
     </div>
 
     <div class="footer">
-      <strong>Samuel Ezra Adhiatmoko</strong><br>
-      NIM: 672023153<br>
       Kantin Biru FTI · Admin Loyalty Point · Sepolia Testnet
     </div>
 
@@ -366,14 +330,50 @@
       }
     })();
 
-    const contractAddress = "0x3e75229941b18E3Fc6d61c3c328123defb10980e";
+    const contractAddress = "0x10acDbb0c6F1c7ADB02210C43cb68955637A6672";
 
     const contractABI = [
+      {
+        "inputs": [],
+        "name": "admin",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
       {
         "inputs": [
           {
             "internalType": "address",
-            "name": "student",
+            "name": "wallet",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "nim",
+            "type": "string"
+          }
+        ],
+        "name": "registerStudent",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "wallet",
             "type": "address"
           },
           {
@@ -393,42 +393,10 @@
         "type": "function"
       },
       {
-        "inputs": [],
-        "name": "admin",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
         "inputs": [
           {
             "internalType": "address",
-            "name": "student",
-            "type": "address"
-          }
-        ],
-        "name": "checkPoint",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "student",
+            "name": "wallet",
             "type": "address"
           },
           {
@@ -446,6 +414,40 @@
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "wallet",
+            "type": "address"
+          }
+        ],
+        "name": "getStudent",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "nim",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "point",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "registered",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
       }
     ];
 
@@ -453,31 +455,15 @@
     let signer;
     let contract;
     let currentAccount;
-    let adminAddress;
 
     function openInMetaMaskMobile() {
       const dappUrl = "samuelezraa.github.io/kantin-biru-loyalty/admin.html";
-      const metamaskDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
-      window.location.href = metamaskDeepLink;
+      window.location.href = "https://metamask.app.link/dapp/" + dappUrl;
     }
 
     async function connectWallet() {
       if (!window.ethereum) {
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-        if (isMobile) {
-          const confirmOpen = confirm(
-            "MetaMask tidak terdeteksi di browser ini. Buka halaman admin melalui MetaMask Mobile?"
-          );
-
-          if (confirmOpen) {
-            openInMetaMaskMobile();
-          }
-
-          return;
-        }
-
-        alert("MetaMask belum terpasang. Gunakan Chrome dengan extension MetaMask.");
+        openInMetaMaskMobile();
         return;
       }
 
@@ -488,13 +474,15 @@
 
         currentAccount = accounts[0];
 
+        document.getElementById("walletAddress").innerText = currentAccount;
+
         provider = new ethers.providers.Web3Provider(window.ethereum);
+
+        await switchToSepolia();
+
         signer = provider.getSigner();
         contract = new ethers.Contract(contractAddress, contractABI, signer);
 
-        document.getElementById("walletAddress").innerText = currentAccount;
-
-        await switchToSepolia();
         await checkAdminStatus();
 
       } catch (error) {
@@ -516,29 +504,16 @@
 
     async function checkAdminStatus() {
       try {
-        provider = new ethers.providers.Web3Provider(window.ethereum);
-        signer = provider.getSigner();
-        contract = new ethers.Contract(contractAddress, contractABI, signer);
-
-        const network = await provider.getNetwork();
-
-        if (network.chainId !== 11155111) {
-          document.getElementById("adminStatus").innerHTML =
-            "<span class='status-warning'>Jaringan belum Sepolia. Silakan pindahkan MetaMask ke Sepolia Test Network.</span>";
-          return;
-        }
-
-        adminAddress = await contract.admin();
+        const adminAddress = await contract.admin();
 
         if (currentAccount.toLowerCase() === adminAddress.toLowerCase()) {
           document.getElementById("adminStatus").innerHTML =
-            "<span class='status-ok'>Wallet ini terdeteksi sebagai admin contract. Fitur tambah dan redeem poin dapat digunakan.</span>";
+            "<span class='status-ok'>Wallet ini adalah admin contract. Semua fitur admin dapat digunakan.</span>";
         } else {
           document.getElementById("adminStatus").innerHTML =
-            "<span class='status-error'>Wallet ini bukan admin contract. Fitur tambah dan redeem poin akan gagal.</span><br><br>" +
+            "<span class='status-error'>Wallet ini bukan admin contract. Fitur daftar, tambah, dan redeem poin akan gagal.</span><br><br>" +
             "Admin contract: " + adminAddress;
         }
-
       } catch (error) {
         console.error(error);
         document.getElementById("adminStatus").innerHTML =
@@ -546,118 +521,155 @@
       }
     }
 
-    async function addPoint() {
-      if (!contract || !currentAccount) {
+    function validateAddress(address) {
+      return ethers.utils.isAddress(address);
+    }
+
+    async function registerStudent() {
+      if (!contract) {
         alert("Hubungkan wallet admin terlebih dahulu.");
         return;
       }
 
-      const student = document.getElementById("addStudentAddress").value.trim();
-      const amount = document.getElementById("addAmount").value;
-      const reason = document.getElementById("addReason").value.trim();
+      const name = document.getElementById("regName").value.trim();
+      const nim = document.getElementById("regNim").value.trim();
+      const wallet = document.getElementById("regWallet").value.trim();
 
-      if (!student || !amount || !reason) {
-        alert("Semua data tambah poin harus diisi.");
+      if (!name || !nim || !wallet) {
+        alert("Nama, NIM, dan wallet harus diisi.");
         return;
       }
 
-      if (!ethers.utils.isAddress(student)) {
-        alert("Alamat wallet mahasiswa tidak valid.");
-        return;
-      }
-
-      try {
-        document.getElementById("addPointResult").innerText =
-          "Memproses transaksi tambah poin...";
-
-        const tx = await contract.addPoint(student, amount, reason);
-        await tx.wait();
-
-        document.getElementById("addPointResult").innerHTML =
-          "<span class='status-ok'>Berhasil menambahkan " + amount + " BRP ke wallet mahasiswa.</span>";
-
-      } catch (error) {
-        console.error(error);
-        document.getElementById("addPointResult").innerHTML =
-          "<span class='status-error'>Gagal menambahkan poin. Pastikan wallet yang terhubung adalah admin contract dan jaringan Sepolia aktif.</span>";
-      }
-    }
-
-    async function redeemPoint() {
-      if (!contract || !currentAccount) {
-        alert("Hubungkan wallet admin terlebih dahulu.");
-        return;
-      }
-
-      const student = document.getElementById("redeemStudentAddress").value.trim();
-      const amount = document.getElementById("redeemAmount").value;
-      const reward = document.getElementById("redeemReward").value.trim();
-
-      if (!student || !amount || !reward) {
-        alert("Semua data redeem poin harus diisi.");
-        return;
-      }
-
-      if (!ethers.utils.isAddress(student)) {
-        alert("Alamat wallet mahasiswa tidak valid.");
-        return;
-      }
-
-      try {
-        document.getElementById("redeemPointResult").innerText =
-          "Memproses transaksi redeem poin...";
-
-        const tx = await contract.redeemPoint(student, amount, reward);
-        await tx.wait();
-
-        document.getElementById("redeemPointResult").innerHTML =
-          "<span class='status-ok'>Berhasil redeem " + amount + " BRP untuk reward: " + reward + ".</span>";
-
-      } catch (error) {
-        console.error(error);
-        document.getElementById("redeemPointResult").innerHTML =
-          "<span class='status-error'>Gagal redeem poin. Pastikan saldo mahasiswa cukup dan wallet yang terhubung adalah admin contract.</span>";
-      }
-    }
-
-    async function checkPointByAddress() {
-      const address = document.getElementById("checkAddress").value.trim();
-
-      if (!address) {
-        alert("Masukkan alamat wallet mahasiswa terlebih dahulu.");
-        return;
-      }
-
-      if (!ethers.utils.isAddress(address)) {
+      if (!validateAddress(wallet)) {
         alert("Alamat wallet tidak valid.");
         return;
       }
 
-      if (!window.ethereum) {
-        openInMetaMaskMobile();
+      try {
+        document.getElementById("registerResult").innerText =
+          "Memproses pendaftaran mahasiswa...";
+
+        const tx = await contract.registerStudent(wallet, name, nim);
+        await tx.wait();
+
+        document.getElementById("registerResult").innerHTML =
+          "<span class='status-ok'>Mahasiswa berhasil didaftarkan.</span>";
+
+      } catch (error) {
+        console.error(error);
+        document.getElementById("registerResult").innerHTML =
+          "<span class='status-error'>Gagal mendaftarkan mahasiswa. Pastikan wallet yang terhubung adalah admin.</span>";
+      }
+    }
+
+    async function checkStudent() {
+      const wallet = document.getElementById("checkWallet").value.trim();
+
+      if (!wallet) {
+        alert("Masukkan wallet mahasiswa.");
+        return;
+      }
+
+      if (!validateAddress(wallet)) {
+        alert("Alamat wallet tidak valid.");
         return;
       }
 
       try {
         provider = new ethers.providers.Web3Provider(window.ethereum);
+        const readContract = new ethers.Contract(contractAddress, contractABI, provider);
 
-        const network = await provider.getNetwork();
+        const data = await readContract.getStudent(wallet);
 
-        if (network.chainId !== 11155111) {
-          alert("Jaringan belum Sepolia. Silakan pindah ke Sepolia.");
+        if (!data.registered) {
+          document.getElementById("checkResult").innerHTML =
+            "<span class='status-warning'>Wallet belum terdaftar.</span>";
           return;
         }
 
-        const readContract = new ethers.Contract(contractAddress, contractABI, provider);
-        const point = await readContract.checkPoint(address);
-
-        document.getElementById("checkPointResult").innerHTML =
-          "Saldo mahasiswa: <span class='status-ok'>" + point.toString() + " BRP</span>";
+        document.getElementById("checkResult").innerHTML =
+          "Nama: <span class='status-ok'>" + data.name + "</span><br>" +
+          "NIM: <span class='status-ok'>" + data.nim + "</span><br>" +
+          "Saldo: <span class='status-ok'>" + data.point.toString() + " BRP</span>";
 
       } catch (error) {
         console.error(error);
-        document.getElementById("checkPointResult").innerHTML =
-          "<span class='status-error'>Gagal mengecek saldo poin. Pastikan jaringan Sepolia aktif.</span>";
+        document.getElementById("checkResult").innerHTML =
+          "<span class='status-error'>Gagal mengambil data mahasiswa.</span>";
+      }
+    }
+
+    async function addPoint() {
+      if (!contract) {
+        alert("Hubungkan wallet admin terlebih dahulu.");
+        return;
+      }
+
+      const wallet = document.getElementById("addWallet").value.trim();
+      const amount = document.getElementById("addAmount").value;
+      const reason = document.getElementById("addReason").value.trim();
+
+      if (!wallet || !amount || !reason) {
+        alert("Wallet, jumlah poin, dan keterangan harus diisi.");
+        return;
+      }
+
+      if (!validateAddress(wallet)) {
+        alert("Alamat wallet tidak valid.");
+        return;
+      }
+
+      try {
+        document.getElementById("addResult").innerText =
+          "Memproses tambah poin...";
+
+        const tx = await contract.addPoint(wallet, amount, reason);
+        await tx.wait();
+
+        document.getElementById("addResult").innerHTML =
+          "<span class='status-ok'>Berhasil menambahkan " + amount + " BRP.</span>";
+
+      } catch (error) {
+        console.error(error);
+        document.getElementById("addResult").innerHTML =
+          "<span class='status-error'>Gagal menambahkan poin. Pastikan mahasiswa sudah terdaftar dan wallet adalah admin.</span>";
+      }
+    }
+
+    async function redeemPoint() {
+      if (!contract) {
+        alert("Hubungkan wallet admin terlebih dahulu.");
+        return;
+      }
+
+      const wallet = document.getElementById("redeemWallet").value.trim();
+      const amount = document.getElementById("redeemAmount").value;
+      const reward = document.getElementById("redeemReward").value.trim();
+
+      if (!wallet || !amount || !reward) {
+        alert("Wallet, jumlah poin, dan reward harus diisi.");
+        return;
+      }
+
+      if (!validateAddress(wallet)) {
+        alert("Alamat wallet tidak valid.");
+        return;
+      }
+
+      try {
+        document.getElementById("redeemResult").innerText =
+          "Memproses redeem poin...";
+
+        const tx = await contract.redeemPoint(wallet, amount, reward);
+        await tx.wait();
+
+        document.getElementById("redeemResult").innerHTML =
+          "<span class='status-ok'>Berhasil redeem " + amount + " BRP untuk " + reward + ".</span>";
+
+      } catch (error) {
+        console.error(error);
+        document.getElementById("redeemResult").innerHTML =
+          "<span class='status-error'>Gagal redeem poin. Pastikan saldo cukup dan wallet adalah admin.</span>";
       }
     }
 
@@ -666,7 +678,7 @@
         if (accounts.length > 0) {
           currentAccount = accounts[0];
           document.getElementById("walletAddress").innerText = currentAccount;
-          checkAdminStatus();
+          connectWallet();
         }
       });
 
