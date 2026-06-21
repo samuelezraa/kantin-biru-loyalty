@@ -66,6 +66,22 @@
       line-height: 1.6;
     }
 
+    .student-info {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(147, 197, 253, 0.22);
+      color: #bfdbfe;
+      font-size: 13px;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .student-info strong {
+      color: #f8fafc;
+    }
+
     .wallet-box {
       margin-top: 18px;
       background: rgba(30, 41, 59, 0.78);
@@ -155,8 +171,13 @@
     .footer {
       text-align: center;
       margin-top: 20px;
-      color: #64748b;
+      color: #94a3b8;
       font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .footer strong {
+      color: #bfdbfe;
     }
 
     @media (max-width: 480px) {
@@ -186,6 +207,11 @@
       <p class="subtitle">
         Hubungkan wallet MetaMask untuk mengecek saldo loyalty point dari transaksi di Kantin Biru.
       </p>
+
+      <div class="student-info">
+        <strong>Samuel Ezra Adhiatmoko</strong><br>
+        NIM: 672023153
+      </div>
 
       <button onclick="connectWallet()">Connect Wallet</button>
 
@@ -218,11 +244,23 @@
     </div>
 
     <div class="footer">
+      <strong>Samuel Ezra Adhiatmoko</strong><br>
+      NIM: 672023153<br>
       Blockchain Loyalty Point · Sepolia Testnet
     </div>
   </div>
 
   <script>
+    (function autoOpenMetaMaskMobile() {
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const hasEthereum = typeof window.ethereum !== "undefined";
+
+      if (isMobile && !hasEthereum) {
+        const dappUrl = "samuelezraa.github.io/kantin-biru-loyalty/";
+        window.location.href = "https://metamask.app.link/dapp/" + dappUrl;
+      }
+    })();
+
     const contractAddress = "0x3e75229941b18E3Fc6d61c3c328123defb10980e";
 
     const contractABI = [
