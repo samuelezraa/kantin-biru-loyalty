@@ -29,7 +29,7 @@
 
     .container {
       width: 100%;
-      max-width: 480px;
+      max-width: 500px;
     }
 
     .card {
@@ -66,32 +66,46 @@
       line-height: 1.6;
     }
 
-    .student-info {
-      margin-top: 14px;
-      padding: 12px 14px;
+    button {
+      width: 100%;
+      margin-top: 16px;
+      padding: 14px 16px;
+      border: none;
       border-radius: 14px;
-      background: rgba(59, 130, 246, 0.12);
-      border: 1px solid rgba(147, 197, 253, 0.22);
-      color: #bfdbfe;
-      font-size: 13px;
-      line-height: 1.6;
-      text-align: center;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
     }
 
-    .student-info strong {
-      color: #f8fafc;
+    button.secondary {
+      background: rgba(51, 65, 85, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.25);
     }
 
-    .wallet-box {
-      margin-top: 18px;
-      background: rgba(30, 41, 59, 0.78);
+    .profile-box {
+      margin-top: 20px;
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(30, 41, 59, 0.72);
       border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: 16px;
-      padding: 14px;
-      word-break: break-all;
-      color: #bfdbfe;
+    }
+
+    .row {
+      margin-bottom: 14px;
+    }
+
+    .label {
+      color: #93c5fd;
       font-size: 13px;
-      line-height: 1.5;
+      margin-bottom: 4px;
+    }
+
+    .value {
+      color: #f8fafc;
+      font-size: 15px;
+      word-break: break-all;
     }
 
     .point-box {
@@ -110,7 +124,7 @@
     }
 
     .point-value {
-      font-size: 38px;
+      font-size: 40px;
       font-weight: 700;
       color: #f8fafc;
     }
@@ -119,30 +133,6 @@
       color: #93c5fd;
       font-size: 16px;
       margin-left: 4px;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 16px;
-      padding: 14px 16px;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: white;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.3);
-    }
-
-    button.secondary {
-      background: rgba(51, 65, 85, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.25);
     }
 
     .note {
@@ -154,7 +144,7 @@
     }
 
     .info {
-      margin-top: 22px;
+      margin-top: 18px;
       padding: 16px;
       border-radius: 16px;
       background: rgba(30, 41, 59, 0.55);
@@ -171,13 +161,8 @@
     .footer {
       text-align: center;
       margin-top: 20px;
-      color: #94a3b8;
+      color: #64748b;
       font-size: 12px;
-      line-height: 1.6;
-    }
-
-    .footer strong {
-      color: #bfdbfe;
     }
 
     @media (max-width: 480px) {
@@ -205,13 +190,8 @@
       <h1>Biru Point</h1>
 
       <p class="subtitle">
-        Hubungkan wallet MetaMask untuk mengecek saldo loyalty point dari transaksi di Kantin Biru.
+        Hubungkan wallet MetaMask untuk melihat data mahasiswa dan saldo loyalty point.
       </p>
-
-      <div class="student-info">
-        <strong>Samuel Ezra Adhiatmoko</strong><br>
-        NIM: 672023153
-      </div>
 
       <button onclick="connectWallet()">Connect Wallet</button>
 
@@ -219,8 +199,26 @@
         Buka di MetaMask Mobile
       </button>
 
-      <div class="wallet-box" id="walletAddress">
-        Wallet belum terhubung.
+      <div class="profile-box">
+        <div class="row">
+          <div class="label">Nama Mahasiswa</div>
+          <div class="value" id="studentName">Belum terhubung</div>
+        </div>
+
+        <div class="row">
+          <div class="label">NIM</div>
+          <div class="value" id="studentNim">-</div>
+        </div>
+
+        <div class="row">
+          <div class="label">Wallet Address</div>
+          <div class="value" id="walletAddress">-</div>
+        </div>
+
+        <div class="row">
+          <div class="label">Status</div>
+          <div class="value" id="studentStatus">Wallet belum dicek</div>
+        </div>
       </div>
 
       <div class="point-box">
@@ -231,7 +229,7 @@
         </div>
       </div>
 
-      <button onclick="checkMyPoint()">Cek Saldo Poin</button>
+      <button onclick="loadStudentData()">Refresh Saldo</button>
 
       <div class="info">
         <strong>Aturan poin:</strong><br>
@@ -244,8 +242,6 @@
     </div>
 
     <div class="footer">
-      <strong>Samuel Ezra Adhiatmoko</strong><br>
-      NIM: 672023153<br>
       Blockchain Loyalty Point · Sepolia Testnet
     </div>
   </div>
@@ -261,23 +257,38 @@
       }
     })();
 
-    const contractAddress = "0x3e75229941b18E3Fc6d61c3c328123defb10980e";
+    const contractAddress = "0x10acDbb0c6F1c7ADB02210C43cb68955637A6672";
 
     const contractABI = [
       {
         "inputs": [
           {
             "internalType": "address",
-            "name": "student",
+            "name": "wallet",
             "type": "address"
           }
         ],
-        "name": "checkPoint",
+        "name": "getStudent",
         "outputs": [
           {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "nim",
+            "type": "string"
+          },
+          {
             "internalType": "uint256",
-            "name": "",
+            "name": "point",
             "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "registered",
+            "type": "bool"
           }
         ],
         "stateMutability": "view",
@@ -286,33 +297,17 @@
     ];
 
     let provider;
-    let signer;
     let contract;
     let currentAccount;
 
     function openInMetaMaskMobile() {
       const dappUrl = "samuelezraa.github.io/kantin-biru-loyalty/";
-      const metamaskDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
-      window.location.href = metamaskDeepLink;
+      window.location.href = "https://metamask.app.link/dapp/" + dappUrl;
     }
 
     async function connectWallet() {
       if (!window.ethereum) {
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-        if (isMobile) {
-          const confirmOpen = confirm(
-            "MetaMask tidak terdeteksi di browser ini. Buka melalui MetaMask Mobile?"
-          );
-
-          if (confirmOpen) {
-            openInMetaMaskMobile();
-          }
-
-          return;
-        }
-
-        alert("MetaMask belum terpasang. Gunakan Chrome dengan extension MetaMask.");
+        openInMetaMaskMobile();
         return;
       }
 
@@ -323,14 +318,15 @@
 
         currentAccount = accounts[0];
 
-        provider = new ethers.providers.Web3Provider(window.ethereum);
-        signer = provider.getSigner();
-        contract = new ethers.Contract(contractAddress, contractABI, signer);
-
         document.getElementById("walletAddress").innerText = currentAccount;
 
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+
         await switchToSepolia();
-        await checkMyPoint();
+
+        contract = new ethers.Contract(contractAddress, contractABI, provider);
+
+        await loadStudentData();
 
       } catch (error) {
         console.error(error);
@@ -349,12 +345,7 @@
       }
     }
 
-    async function checkMyPoint() {
-      if (!window.ethereum) {
-        openInMetaMaskMobile();
-        return;
-      }
-
+    async function loadStudentData() {
       if (!currentAccount) {
         alert("Hubungkan wallet terlebih dahulu.");
         return;
@@ -371,13 +362,24 @@
           return;
         }
 
-        const point = await contract.checkPoint(currentAccount);
+        const data = await contract.getStudent(currentAccount);
 
-        document.getElementById("pointValue").innerText = point.toString();
+        if (!data.registered) {
+          document.getElementById("studentName").innerText = "-";
+          document.getElementById("studentNim").innerText = "-";
+          document.getElementById("pointValue").innerText = "0";
+          document.getElementById("studentStatus").innerText = "Wallet belum terdaftar oleh admin.";
+          return;
+        }
+
+        document.getElementById("studentName").innerText = data.name;
+        document.getElementById("studentNim").innerText = data.nim;
+        document.getElementById("pointValue").innerText = data.point.toString();
+        document.getElementById("studentStatus").innerText = "Mahasiswa terdaftar.";
 
       } catch (error) {
         console.error(error);
-        alert("Gagal mengecek saldo poin. Pastikan wallet terhubung dan jaringan Sepolia aktif.");
+        alert("Gagal mengambil data mahasiswa.");
       }
     }
 
@@ -386,7 +388,7 @@
         if (accounts.length > 0) {
           currentAccount = accounts[0];
           document.getElementById("walletAddress").innerText = currentAccount;
-          checkMyPoint();
+          loadStudentData();
         }
       });
 
