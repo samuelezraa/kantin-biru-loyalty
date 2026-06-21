@@ -60,6 +60,22 @@
       line-height: 1.6;
     }
 
+    .student-info {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(147, 197, 253, 0.22);
+      color: #bfdbfe;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .student-info strong {
+      color: #f8fafc;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -185,6 +201,11 @@
       margin-top: 28px;
       color: #94a3b8;
       font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .footer strong {
+      color: #bfdbfe;
     }
 
     .link-box {
@@ -224,10 +245,16 @@
     <div class="header">
       <div class="badge">Admin Panel</div>
       <h1>Kantin Biru Point</h1>
+
       <p class="subtitle">
         Halaman khusus admin atau kasir untuk menambahkan poin, melakukan redeem,
         dan mengecek saldo Biru Point mahasiswa.
       </p>
+
+      <div class="student-info">
+        <strong>Samuel Ezra Adhiatmoko</strong><br>
+        NIM: 672023153
+      </div>
     </div>
 
     <div class="grid">
@@ -321,12 +348,24 @@
     </div>
 
     <div class="footer">
+      <strong>Samuel Ezra Adhiatmoko</strong><br>
+      NIM: 672023153<br>
       Kantin Biru FTI · Admin Loyalty Point · Sepolia Testnet
     </div>
 
   </div>
 
   <script>
+    (function autoOpenMetaMaskMobile() {
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const hasEthereum = typeof window.ethereum !== "undefined";
+
+      if (isMobile && !hasEthereum) {
+        const dappUrl = "samuelezraa.github.io/kantin-biru-loyalty/admin.html";
+        window.location.href = "https://metamask.app.link/dapp/" + dappUrl;
+      }
+    })();
+
     const contractAddress = "0x3e75229941b18E3Fc6d61c3c328123defb10980e";
 
     const contractABI = [
